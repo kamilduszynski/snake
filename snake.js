@@ -35,18 +35,11 @@ function updateGame() {
     if (direction === "RIGHT") headX += box;
     if (direction === "DOWN") headY += box;
 
-    // Check for collisions with walls
-    if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
-        alert("Game Over!");
-        document.location.reload();
-    }
-
-    // Check for collisions with itself
-    for (let i = 1; i < snake.length; i++) {
-        if (snake[i].x === headX && snake[i].y === headY) {
-            alert("Game Over!");
-            document.location.reload();
-        }
+    // Check for collisions with walls or itself
+    if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height || 
+        snake.some(segment => segment.x === headX && segment.y === headY)) {
+        gameOver();
+        return;
     }
 
     let newHead = { x: headX, y: headY };
@@ -91,6 +84,8 @@ function gameOver() {
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
     ctx.fillText("Game Over!", canvas.width / 4, canvas.height / 2);
+    alert("Game Over!");
+    document.location.reload();
 }
 
 // start game
