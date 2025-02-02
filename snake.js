@@ -14,6 +14,7 @@ function initGame() {
     score = 0;
     
     gameInterval = setInterval(gameLoop, 100);
+    startButton.style.display = "none"; // Hide button
 }
 
 document.addEventListener("keydown", changeDirection);
@@ -85,6 +86,7 @@ function gameOver() {
     ctx.font = "30px Arial";
     ctx.fillText("Game Over!", canvas.width / 4, canvas.height / 2);
     alert("Game Over!");
+    startButton.style.display = "block"; // Show button
     document.location.reload();
 }
 
