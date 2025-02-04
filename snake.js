@@ -36,12 +36,17 @@ function updateGame() {
     if (direction === "RIGHT") headX += box;
     if (direction === "DOWN") headY += box;
 
-    // Check for collisions with walls or itself
-    if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height || 
-        snake.some(segment => segment.x === headX && segment.y === headY)) {
+    // Check for collisions with itself
+    if (snake.some(segment => segment.x === headX && segment.y === headY)) {
         gameOver();
         return;
     }
+
+    // Go to opposite wall
+    if (headX < 0) headX = canvas.width;
+    else if (headX >= canvas.width) headX = 0;
+    else if (headY < 0) headY = canvas.height;
+    else if (headY >= canvas.height) headY = 0;
 
     let newHead = { x: headX, y: headY };
     snake.unshift(newHead);
