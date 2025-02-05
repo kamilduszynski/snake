@@ -4,7 +4,6 @@ const ctx = canvas.getContext("2d");
 const startButton = document.getElementById("startButton");
 
 const box = 30;
-const radius = 15;
 let snake, food, direction, score, gameInterval;
 
 // Load images
@@ -24,6 +23,46 @@ function initGame() {
     gameInterval = setInterval(gameLoop, 100);
     startButton.style.display = "none"; // Hide button
 }
+
+function checkDevice() {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const controls = document.getElementById("controls");
+
+    if (!isTouchDevice) {
+        controls.style.display = "none"; // Hide controls on desktop
+    }
+}
+
+window.onload = checkDevice;
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+document.addEventListener("touchstart", function (event) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+}, false);
+
+document.addEventListener("touchmove", function (event) {
+    if (!touchStartX || !touchStartY) return;
+
+    let touchEndX = event.touches[0].clientX;
+    let touchEndY = event.touches[0].clientY;
+
+    let diffX = touchStartX - touchEndX;
+    let diffY = touchStartY - touchEndY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0 && direction !== "RIGHT") direction = "LEFT"; // Swipe Left
+        else if (diffX < 0 && direction !== "LEFT") direction = "RIGHT"; // Swipe Right
+    } else {
+        if (diffY > 0 && direction !== "DOWN") direction = "UP"; // Swipe Up
+        else if (diffY < 0 && direction !== "UP") direction = "DOWN"; // Swipe Down
+    }
+
+    touchStartX = 0;
+    touchStartY = 0;
+}, false);
 
 document.addEventListener("keydown", changeDirection);
 

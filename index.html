@@ -11,6 +11,16 @@
     <div id="gameContainer"></div>
         <canvas id="gameCanvas" width="600" height="600"></canvas>
         <button id="startButton" onclick="startGame()">New Game</button>
+
+        <!-- Mobile Controls -->
+        <div id="controls">
+            <button onclick="changeDirection('UP')">🔼</button>
+            <div>
+                <button onclick="changeDirection('LEFT')">◀️</button>
+                <button onclick="changeDirection('RIGHT')">▶️</button>
+            </div>
+            <button onclick="changeDirection('DOWN')">🔽</button>
+        </div>
     </div>
     <script src="snake.js"></script>
 </body>

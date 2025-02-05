@@ -42,3 +42,31 @@ body {
 #startButton:hover {
     background: #218838;
 }
+
+#controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+#controls div {
+    display: flex;
+    justify-content: center;
+}
+
+#controls button {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    margin: 5px;
+    background: #444;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#controls button:hover {
+    background: #666;
+}
