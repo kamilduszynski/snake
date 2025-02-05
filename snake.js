@@ -2,6 +2,10 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.getElementById("startButton");
+const upButton = document.getElementById("upButton");
+const downButton = document.getElementById("downButton");
+const leftButton = document.getElementById("leftButton");
+const rightButton = document.getElementById("rightButton");
 
 // Load images
 const snakeHeadImg = new Image();
@@ -47,34 +51,27 @@ function checkDevice() {
 
     if (!isTouchDevice) {
         controls.style.display = "none"; // Hide controls on desktop
-        document.addEventListener("keydown", changeDirection);
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowLeft") changeDirection("LEFT");
+            if (event.key === "ArrowUp") changeDirection("UP");
+            if (event.key === "ArrowRight") changeDirection("RIGHT");
+            if (event.key === "ArrowDown") changeDirection("DOWN");
+        });
     } else {
-        document.getElementById("upBtn").addEventListener("click", function () {
-            if (direction !== "DOWN") direction = "UP";
-        });
-        
-        document.getElementById("downBtn").addEventListener("click", function () {
-            if (direction !== "UP") direction = "DOWN";
-        });
-        
-        document.getElementById("leftBtn").addEventListener("click", function () {
-            if (direction !== "RIGHT") direction = "LEFT";
-        });
-        
-        document.getElementById("rightBtn").addEventListener("click", function () {
-            if (direction !== "LEFT") direction = "RIGHT";
-        });
+        document.getElementById("upButton").addEventListener("click", () => changeDirection("UP"));
+        document.getElementById("downButton").addEventListener("click", () => changeDirection("DOWN"));
+        document.getElementById("leftButton").addEventListener("click", () => changeDirection("LEFT"));
+        document.getElementById("rightButton").addEventListener("click", () => changeDirection("RIGHT"));
     }
 }
 
 window.onload = checkDevice;
 
-function changeDirection(event) {
-    const key = event.keyCode;
-    if (key === 37 && direction !== "RIGHT") direction = "LEFT";
-    else if (key === 38 && direction !== "DOWN") direction = "UP";
-    else if (key === 39 && direction !== "LEFT") direction = "RIGHT";
-    else if (key === 40 && direction !== "UP") direction = "DOWN";
+function changeDirection(newDirection) {
+    if (newDirection === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+    if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
+    if (newDirection === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+    if (newDirection === "DOWN" && direction !== "UP") direction = "DOWN";
 }
 
 function updateGame() {
