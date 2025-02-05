@@ -3,8 +3,16 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.getElementById("startButton");
 
-const box = 20;
+const box = 30;
+const radius = 15;
 let snake, food, direction, score, gameInterval;
+
+// Load images
+const snakeHeadImg = new Image();
+snakeHeadImg.src = "assets/head.png";
+
+const mouseImg = new Image();
+mouseImg.src = "assets/mouse.png";
 
 // Initialize game
 function initGame() {
@@ -63,15 +71,20 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw food
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x, food.y, box, box);
+    ctx.drawImage(mouseImg, food.x, food.y, box, box);
 
     // Draw snake
-    ctx.fillStyle = "lime";
     snake.forEach((part, index) => {
-        ctx.fillRect(part.x, part.y, box, box);
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(part.x, part.y, box, box);
+        if (index === 0) {
+            // Draw snake head
+            ctx.drawImage(snakeHeadImg, part.x, part.y, box, box);
+        } else {
+            ctx.fillStyle = "#48c048";
+            ctx.fillRect(part.x, part.y, box, box);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(part.x, part.y, box, box);
+        }
     });
 
     // Display score

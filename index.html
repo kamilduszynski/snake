@@ -4,35 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
-    <style>
-        body { text-align: center; font-family: Arial, sans-serif; }
-        canvas { background: #000; display: block; margin: auto; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Jesteś super Kotku 😘😘😘</h1>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <button id="startButton" onclick="startGame()">New Game</button>
-    <style>
-        #startButton {
-        display: block;
-        position: absolute;
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 10px 20px;
-        font-size: 20px;
-        background: #28a745;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    #startButton:hover {
-        background: #218838;
-    }
-    </style>
+    <h1 id="header">Jesteś super Kotku 😘😘😘</h1>
+    <div id="gameContainer"></div>
+        <canvas id="gameCanvas" width="600" height="600"></canvas>
+        <button id="startButton" onclick="startGame()">New Game</button>
+    </div>
     <script src="snake.js"></script>
 </body>
 </html>

@@ -1,0 +1,44 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* height: 100vh; */
+    background-color: #222; /* Optional: Dark background */
+}
+
+#header { 
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the content */
+    width: 600px; /* Match canvas width */
+    margin: auto;
+}
+
+#gameCanvas {
+    display: block;
+    cursor: none;
+    background: #000;
+    border: 10px solid transparent;
+    border-image: url("assets/border.png") 30 round;
+}
+
+#startButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#startButton:hover {
+    background: #218838;
+}
