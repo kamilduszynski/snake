@@ -3,15 +3,32 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.getElementById("startButton");
 
-const box = 30;
-let snake, food, direction, score, gameInterval;
-
 // Load images
 const snakeHeadImg = new Image();
 snakeHeadImg.src = "assets/head.png";
 
 const mouseImg = new Image();
 mouseImg.src = "assets/mouse.png";
+
+let box; // Box size (will scale dynamically)
+let rows, cols; // Grid dimensions
+let snake, food, direction, score, gameInterval;
+
+// Function to resize canvas based on screen size
+function resizeCanvas() {
+    let screenSize = Math.min(window.innerWidth, window.innerHeight) * 0.7; // 70% of the smaller screen dimension
+    screenSize = Math.floor(screenSize / 20) * 20; // Round to nearest multiple of 20 for consistency
+
+    canvas.width = screenSize;
+    canvas.height = screenSize;
+
+    box = screenSize / 20; // Scale box size dynamically
+    rows = cols = 20; // Keep a 20x20 grid
+}
+
+// Call resizeCanvas when the window loads and resizes
+window.addEventListener("load", resizeCanvas);
+window.addEventListener("resize", resizeCanvas);
 
 // Initialize game
 function initGame() {
@@ -30,41 +47,27 @@ function checkDevice() {
 
     if (!isTouchDevice) {
         controls.style.display = "none"; // Hide controls on desktop
+        document.addEventListener("keydown", changeDirection);
+    } else {
+        document.getElementById("upBtn").addEventListener("click", function () {
+            if (direction !== "DOWN") direction = "UP";
+        });
+        
+        document.getElementById("downBtn").addEventListener("click", function () {
+            if (direction !== "UP") direction = "DOWN";
+        });
+        
+        document.getElementById("leftBtn").addEventListener("click", function () {
+            if (direction !== "RIGHT") direction = "LEFT";
+        });
+        
+        document.getElementById("rightBtn").addEventListener("click", function () {
+            if (direction !== "LEFT") direction = "RIGHT";
+        });
     }
 }
 
 window.onload = checkDevice;
-
-let touchStartX = 0;
-let touchStartY = 0;
-
-document.addEventListener("touchstart", function (event) {
-    touchStartX = event.touches[0].clientX;
-    touchStartY = event.touches[0].clientY;
-}, false);
-
-document.addEventListener("touchmove", function (event) {
-    if (!touchStartX || !touchStartY) return;
-
-    let touchEndX = event.touches[0].clientX;
-    let touchEndY = event.touches[0].clientY;
-
-    let diffX = touchStartX - touchEndX;
-    let diffY = touchStartY - touchEndY;
-
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-        if (diffX > 0 && direction !== "RIGHT") direction = "LEFT"; // Swipe Left
-        else if (diffX < 0 && direction !== "LEFT") direction = "RIGHT"; // Swipe Right
-    } else {
-        if (diffY > 0 && direction !== "DOWN") direction = "UP"; // Swipe Up
-        else if (diffY < 0 && direction !== "UP") direction = "DOWN"; // Swipe Down
-    }
-
-    touchStartX = 0;
-    touchStartY = 0;
-}, false);
-
-document.addEventListener("keydown", changeDirection);
 
 function changeDirection(event) {
     const key = event.keyCode;
