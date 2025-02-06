@@ -1,11 +1,16 @@
 // Get elements
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+
 const startButton = document.getElementById("startButton");
 const upButton = document.getElementById("upButton");
 const downButton = document.getElementById("downButton");
 const leftButton = document.getElementById("leftButton");
 const rightButton = document.getElementById("rightButton");
+
+const music = new Audio('assets/arcade_music.mp3');
+const eatSound = new Audio('assets/arcade_eat.mp3');
+const gameOverSound = new Audio('assets/arcade_gameover.mp3');
 
 // Load images
 const snakeHeadImg = new Image();
@@ -34,17 +39,6 @@ function resizeCanvas() {
 window.addEventListener("load", resizeCanvas);
 window.addEventListener("resize", resizeCanvas);
 
-// Initialize game
-function initGame() {
-    snake = [{ x: 10 * box, y: 10 * box }];
-    food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
-    direction = "RIGHT";
-    score = 0;
-    
-    gameInterval = setInterval(gameLoop, 100);
-    startButton.style.display = "none"; // Hide button
-}
-
 function checkDevice() {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const controls = document.getElementById("controls");
@@ -65,13 +59,41 @@ function checkDevice() {
     }
 }
 
-window.onload = checkDevice;
-
 function changeDirection(newDirection) {
     if (newDirection === "LEFT" && direction !== "RIGHT") direction = "LEFT";
     if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
     if (newDirection === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
     if (newDirection === "DOWN" && direction !== "UP") direction = "DOWN";
+}
+
+window.onload = checkDevice;
+
+// Initialize game
+function initGame() {
+    music.play();
+    music.loop = true;
+    music.volume = 0.05;
+    music.playbackRate = 1.25;
+    eatSound.playbackRate = 1.25;
+
+    score = 0;
+    direction = "RIGHT";
+    snake = [{ x: 10 * box, y: 10 * box }];
+    gameInterval = setInterval(gameLoop, 100);
+
+    generateFood();
+    startButton.style.display = "none";
+}
+
+// Generating Food
+function generateFood() {
+    x = Math.floor(Math.random() * 20) * box;
+    y = Math.floor(Math.random() * 20) * box;
+    while (snake.some(segment => segment.x === x && segment.y === y)) {
+        x = Math.floor(Math.random() * 20) * box;
+        y = Math.floor(Math.random() * 20) * box;
+    }
+    food = {x, y};
 }
 
 function updateGame() {
@@ -100,7 +122,8 @@ function updateGame() {
 
     if (headX === food.x && headY === food.y) {
         score++;
-        food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
+        eatSound.play();
+        generateFood();
     } else {
         snake.pop();
     }
@@ -118,11 +141,14 @@ function draw() {
             // Draw snake head
             ctx.drawImage(snakeHeadImg, part.x, part.y, box, box);
         } else {
-            ctx.fillStyle = "#48c048";
-            ctx.fillRect(part.x, part.y, box, box);
+            // Draw snake body
+            ctx.fillStyle = "#8fc43c";
+            ctx.beginPath();
+            ctx.arc(part.x + box / 2, part.y + box / 2, box / 2, 0, Math.PI * 2);
+            ctx.fill();
             ctx.lineWidth = 2;
-            ctx.strokeStyle = "white";
-            ctx.strokeRect(part.x, part.y, box, box);
+            ctx.strokeStyle = "black";
+            ctx.stroke();
         }
     });
 
@@ -138,16 +164,19 @@ function gameLoop() {
 }
 
 function gameOver() {
+    music.pause();
+    gameOverSound.play();
+    
     clearInterval(gameInterval); // Stop game
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
     ctx.fillText("Game Over!", canvas.width / 4, canvas.height / 2);
     alert("Game Over!");
-    startButton.style.display = "block"; // Show button
+    startButton.style.display = "block";
     document.location.reload();
 }
 
-// start game
+// Start game
 function startGame() {
-    initGame(); // start game variables
+    initGame();
 }
