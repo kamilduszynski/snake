@@ -1,21 +1,47 @@
+:root{
+    --base-color: white;
+    --text-color: black;
+}
+
+.darkmode {
+    --base-color: #222;
+    --text-color: white;
+}
+
 body {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    background-color: #222; /* Optional: Dark background */
-}
-
-#header { 
-    color: white;
-    font-family: Arial, sans-serif;
-}
-
-#gameContainer {
-    display: flex;
     flex-direction: column;
-    align-items: center; /* Center the content */
-    width: 600px; /* Match canvas width */
-    margin: auto;
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    background-color: var(--base-color);
+}
+
+#darkModeButton {
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    position: fixed;
+    cursor: pointer;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--base-color);
+    border: var(--text-color) 2px solid;
+}
+
+#darkModeButton svg:last-child{
+    display: none;
+}
+
+.darkmode #darkModeButton svg:first-child{
+    display: none;
+}
+
+.darkmode #darkModeButton svg:last-child{
+    display: block;
 }
 
 #gameCanvas {
@@ -27,15 +53,15 @@ body {
 }
 
 #startButton {
+    border: none;
     display: block;
+    cursor: pointer;
+    color:  white;
+    font-size: 20px;
     margin: 20px auto;
     padding: 10px 20px;
-    font-size: 20px;
-    background: #28a745;
-    color: white;
-    border: none;
     border-radius: 5px;
-    cursor: pointer;
+    background: #28a745;
 }
 
 #startButton:hover {
@@ -44,9 +70,9 @@ body {
 
 #controls {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     margin-top: 15px;
+    align-items: center;
+    flex-direction: column;
 }
 
 #controls div {
@@ -55,17 +81,12 @@ body {
 }
 
 #controls button {
+    margin: 5px;
     width: 70px;
     height: 70px;
-    font-size: 30px;
-    margin: 5px;
-    background: #444;
-    color: white;
     border: none;
+    font-size: 30px;
+    background: #444;
     border-radius: 10px;
-    cursor: pointer;
-}
-
-#controls button:hover {
-    background: #666;
+    color: var(--text-color);
 }
