@@ -97,7 +97,7 @@ function initGame() {
     score = 0;
     direction = "RIGHT";
     snake = [{ x: 10 * boxSize, y: 10 * boxSize }];
-    gameInterval = setInterval(gameLoop, 85);
+    gameInterval = setInterval(gameLoop, 150);
 
     generateFood();
     startButton.style.display = "none";
