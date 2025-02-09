@@ -1,6 +1,9 @@
 // Get elements
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const gameCanvas = document.getElementById("gameCanvas");
+const gameCtx = gameCanvas.getContext("2d");
+
+const scoreCanvas = document.getElementById("scoreCanvas");
+const scoreCtx = scoreCanvas.getContext("2d");
 
 const darkModeButton = document.getElementById("darkModeButton");
 const startButton = document.getElementById("startButton");
@@ -21,6 +24,11 @@ snakeHeadImg.src = "assets/head.png";
 const mouseImg = new Image();
 mouseImg.src = "assets/mouse.png";
 
+// Load fonts
+const pixelFont = new FontFace("Pixel", "url(assets/pixel_font.ttf)");
+pixelFont.load();
+document.fonts.add(pixelFont);
+
 // Call resizeCanvas when the window loads and resizes and check if the device is touch-enabled
 window.onload = checkDevice;
 window.addEventListener("load", resizeCanvas);
@@ -29,15 +37,18 @@ window.addEventListener("resize", resizeCanvas);
 let boxSize;
 let snake, food, direction, score, gameInterval;
 let darkmode = localStorage.getItem("darkmode");
+let scorecolor = localStorage.getItem("scorecolor");
 
 const enableDarkMode = () => {
     document.body.classList.add("darkmode");
     localStorage.setItem("darkmode", "active");
+    localStorage.setItem("scorecolor", "white");
 }
 
 const disableDarkMode = () => {
     document.body.classList.remove("darkmode");
     localStorage.setItem("darkmode", null);
+    localStorage.setItem("scorecolor", "black");
 }
 
 if (darkmode === "active") enableDarkMode()
@@ -53,8 +64,8 @@ function resizeCanvas() {
     var screenSize = Math.min(window.innerWidth, window.innerHeight) * 0.7; // 70% of the smaller screen dimension
     screenSize = Math.floor(screenSize / 20) * 20; // Round to nearest multiple of 20 for consistency
 
-    canvas.width = screenSize;
-    canvas.height = screenSize;
+    gameCanvas.width = screenSize;
+    gameCanvas.height = screenSize;
 
     boxSize = screenSize / 20; // Scale boxSize dynamically
 }
@@ -96,8 +107,8 @@ function initGame() {
 
     score = 0;
     direction = "RIGHT";
-    snake = [{ x: 10 * boxSize, y: 10 * boxSize }];
     gameInterval = setInterval(gameLoop, 150);
+    snake = [{ x: 10 * boxSize, y: 10 * boxSize }];
 
     generateFood();
     startButton.style.display = "none";
@@ -130,12 +141,12 @@ function updateGame() {
     }
 
     // Go to opposite wall
-    if (headX < 0) headX = canvas.width;
-    else if (headX >= canvas.width) headX = 0;
-    else if (headY < 0) headY = canvas.height;
-    else if (headY >= canvas.height) headY = 0;
+    if (headX < 0) headX = gameCanvas.width;
+    else if (headX >= gameCanvas.width) headX = 0;
+    else if (headY < 0) headY = gameCanvas.height;
+    else if (headY >= gameCanvas.height) headY = 0;
 
-    let newHead = { x: headX, y: headY };
+    newHead = { x: headX, y: headY };
     snake.unshift(newHead);
 
     if (headX === food.x && headY === food.y) {
@@ -147,38 +158,45 @@ function updateGame() {
     }
 }
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function drawGame() {
+    gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
 
     // Draw food
-    ctx.drawImage(mouseImg, food.x, food.y, boxSize, boxSize);
+    gameCtx.drawImage(mouseImg, food.x, food.y, boxSize, boxSize);
 
     // Draw snake
     snake.forEach((part, index) => {
         if (index === 0) {
             // Draw snake head
-            ctx.drawImage(snakeHeadImg, part.x, part.y, boxSize, boxSize);
+            gameCtx.drawImage(snakeHeadImg, part.x, part.y, boxSize, boxSize);
         } else {
             // Draw snake body
-            ctx.fillStyle = "#8fc43c";
-            ctx.beginPath();
-            ctx.arc(part.x + boxSize / 2, part.y + boxSize / 2, boxSize / 2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = "black";
-            ctx.stroke();
+            gameCtx.fillStyle = "#8fc43c";
+            gameCtx.beginPath();
+            gameCtx.arc(part.x + boxSize / 2, part.y + boxSize / 2, boxSize / 2, 0, Math.PI * 2);
+            gameCtx.fill();
+            gameCtx.lineWidth = 2;
+            gameCtx.strokeStyle = "black";
+            gameCtx.stroke();
         }
     });
+}
 
-    // Display score
-    ctx.fillStyle = "white";
-    ctx.font = 0.3 * boxSize + "px Arial";
-    ctx.fillText("Score: " + score, 10, 20 * boxSize - 10);
+// Function to draw the score separately
+function drawScore() {
+    scorecolor = "black";
+    scorecolor = localStorage.getItem("scorecolor");
+
+    scoreCtx.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
+    scoreCtx.fillStyle = scorecolor;
+    scoreCtx.font = boxSize + "px Pixel";
+    scoreCtx.fillText("Score: " + score, boxSize * 8, 30);
 }
 
 function gameLoop() {
     updateGame();
-    draw();
+    drawGame();
+    drawScore();
 }
 
 function gameOver() {
@@ -186,7 +204,7 @@ function gameOver() {
     gameOverSound.play();
     
     clearInterval(gameInterval); // Stop game
-    alert("Game Over!");
+    alert("Game Over!\nYour score: " + score);
 
     document.location.reload();
 }

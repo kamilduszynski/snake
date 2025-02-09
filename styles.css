@@ -8,13 +8,18 @@
     --text-color: white;
 }
 
+@font-face {
+    font-family: "Pixel";
+    src: url("assets/pixel_font.ttf");
+}
+
 body {
     display: flex;
+    font-family: Pixel;
     align-items: center;
     flex-direction: column;
     color: var(--text-color);
-    font-family: Arial, sans-serif;
-    background-color: var(--base-color);
+    background: var(--base-color);
 }
 
 #darkModeButton {
@@ -28,8 +33,12 @@ body {
     border-radius: 50%;
     align-items: center;
     justify-content: center;
-    background-color: var(--base-color);
+    background: var(--base-color);
     border: var(--text-color) 2px solid;
+}
+
+#darkModeButton:hover {
+    background: rgb(130, 130, 130);
 }
 
 #darkModeButton svg:last-child{
@@ -45,8 +54,8 @@ body {
 }
 
 #gameCanvas {
-    display: block;
     cursor: none;
+    display: block;
     background: #000;
     border: 10px solid transparent;
     border-image: url("assets/border.png") 30 round;
@@ -58,10 +67,13 @@ body {
     cursor: pointer;
     color:  white;
     font-size: 20px;
+    font-family: Pixel;
     margin: 20px auto;
     padding: 10px 20px;
     border-radius: 5px;
-    background: #28a745;
+    background: #8fc43c;
+    color: var(--text-color);
+    border: var(--text-color) 2px solid;
 }
 
 #startButton:hover {
