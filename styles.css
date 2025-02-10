@@ -3,7 +3,7 @@
     --text-color: black;
 }
 
-.darkmode {
+.darkMode {
     --base-color: #222;
     --text-color: white;
 }
@@ -45,11 +45,11 @@ body {
     display: none;
 }
 
-.darkmode #darkModeButton svg:first-child{
+.darkMode #darkModeButton svg:first-child{
     display: none;
 }
 
-.darkmode #darkModeButton svg:last-child{
+.darkMode #darkModeButton svg:last-child{
     display: block;
 }
 
@@ -81,7 +81,7 @@ body {
 }
 
 #controls {
-    display: flex;
+    display: none;
     margin-top: 15px;
     align-items: center;
     flex-direction: column;

@@ -7,6 +7,8 @@ const scoreCtx = scoreCanvas.getContext("2d");
 
 const darkModeButton = document.getElementById("darkModeButton");
 const startButton = document.getElementById("startButton");
+
+const controls = document.getElementById("controls");
 const upButton = document.getElementById("upButton");
 const downButton = document.getElementById("downButton");
 const leftButton = document.getElementById("leftButton");
@@ -30,7 +32,6 @@ pixelFont.load();
 document.fonts.add(pixelFont);
 
 // Call resizeCanvas when the window loads and resizes and check if the device is touch-enabled
-window.onload = checkDevice;
 window.addEventListener("load", resizeCanvas);
 window.addEventListener("resize", resizeCanvas);
 
@@ -80,10 +81,8 @@ function resizeCanvas() {
 
 function checkDevice() {
     const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-    const controls = document.getElementById("controls");
 
     if (!isTouchDevice) {
-        controls.style.display = "none"; // Hide controls on desktop
         document.addEventListener("keydown", (event) => {
             if (event.key === "ArrowLeft") changeDirection("LEFT");
             if (event.key === "ArrowUp") changeDirection("UP");
@@ -91,6 +90,7 @@ function checkDevice() {
             if (event.key === "ArrowDown") changeDirection("DOWN");
         });
     } else {
+        controls.style.display = "block";
         document.getElementById("upButton").addEventListener("click", () => changeDirection("UP"));
         document.getElementById("downButton").addEventListener("click", () => changeDirection("DOWN"));
         document.getElementById("leftButton").addEventListener("click", () => changeDirection("LEFT"));
@@ -126,6 +126,7 @@ function initGame() {
     generateFood();
 
     startButton.style.display = "none";
+    checkDevice();
 }
 
 // Generating Food
