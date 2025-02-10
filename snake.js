@@ -34,8 +34,13 @@ window.onload = checkDevice;
 window.addEventListener("load", resizeCanvas);
 window.addEventListener("resize", resizeCanvas);
 
+let food;
+let snake;
+let score;
 let boxSize;
-let snake, food, direction, score, gameInterval;
+let direction;
+let gameInterval;
+let gameIntervalValue;
 let darkmode = localStorage.getItem("darkmode");
 let scorecolor = localStorage.getItem("scorecolor");
 
@@ -61,13 +66,14 @@ darkModeButton.addEventListener("click", () => {
 
 // Function to resize canvas based on screen size
 function resizeCanvas() {
-    var screenSize = Math.min(window.innerWidth, window.innerHeight) * 0.7; // 70% of the smaller screen dimension
+    screenSize = Math.min(window.innerWidth, window.innerHeight) * 0.7; // 70% of the smaller screen dimension
     screenSize = Math.floor(screenSize / 20) * 20; // Round to nearest multiple of 20 for consistency
+    boxSize = screenSize / 20; // Scale boxSize dynamically
 
     gameCanvas.width = screenSize;
     gameCanvas.height = screenSize;
-
-    boxSize = screenSize / 20; // Scale boxSize dynamically
+    scoreCanvas.width = screenSize;
+    scoreCanvas.height = boxSize;
 }
 
 function checkDevice() {
@@ -91,10 +97,14 @@ function checkDevice() {
 }
 
 function changeDirection(newDirection) {
+    if (directionChanged) return; // Prevent changing direction more than once per game loop iteration
+
     if (newDirection === "LEFT" && direction !== "RIGHT") direction = "LEFT";
     if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
     if (newDirection === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
     if (newDirection === "DOWN" && direction !== "UP") direction = "DOWN";
+
+    directionChanged = true; // Set the flag to true after changing direction
 }
 
 // Initialize game
@@ -107,10 +117,12 @@ function initGame() {
 
     score = 0;
     direction = "RIGHT";
-    gameInterval = setInterval(gameLoop, 150);
-    snake = [{ x: 10 * boxSize, y: 10 * boxSize }];
+    gameIntervalValue = 150;
+    gameInterval = setInterval(gameLoop, gameIntervalValue);
 
+    snake = [{ x: 10 * boxSize, y: 10 * boxSize }];
     generateFood();
+
     startButton.style.display = "none";
 }
 
@@ -153,9 +165,28 @@ function updateGame() {
         score++;
         eatSound.play();
         generateFood();
+        speedIncreased = false; // Reset the flag when food is eaten
     } else {
         snake.pop();
     }
+
+    // Increase speed as score increases
+    if (score % 10 === 0 && score > 0 && gameIntervalValue > 25 && !speedIncreased) {
+        increaseSpeed();
+        speedIncreased = true; // Set the flag to true after increasing speed
+    }
+
+    directionChanged = false; // Reset the direction change flag
+}
+
+function increaseSpeed() {
+    console.log("Increasing speed");
+    console.log("Old interval: " + gameIntervalValue);
+    gameIntervalValue -= 25;
+    console.log("New interval: " + gameIntervalValue);
+    clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, gameIntervalValue);
+    console.log("Speed increased!");
 }
 
 function drawGame() {

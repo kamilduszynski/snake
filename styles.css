@@ -98,7 +98,6 @@ body {
     height: 70px;
     border: none;
     font-size: 30px;
-    background: #444;
     border-radius: 10px;
-    color: var(--text-color);
+    background: var(--text-color);
 }
