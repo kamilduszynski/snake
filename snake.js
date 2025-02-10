@@ -41,27 +41,27 @@ let boxSize;
 let direction;
 let gameInterval;
 let gameIntervalValue;
-let darkmode = localStorage.getItem("darkmode");
-let scorecolor = localStorage.getItem("scorecolor");
+let darkMode = localStorage.getItem("darkMode");
+let scoreColor = localStorage.getItem("scoreColor");
 
 const enableDarkMode = () => {
-    document.body.classList.add("darkmode");
-    localStorage.setItem("darkmode", "active");
-    localStorage.setItem("scorecolor", "white");
+    document.body.classList.add("darkMode");
+    localStorage.setItem("darkMode", "active");
+    localStorage.setItem("scoreColor", "white");
 }
 
 const disableDarkMode = () => {
-    document.body.classList.remove("darkmode");
-    localStorage.setItem("darkmode", null);
-    localStorage.setItem("scorecolor", "black");
+    document.body.classList.remove("darkMode");
+    localStorage.setItem("darkMode", null);
+    localStorage.setItem("scoreColor", "black");
 }
 
-if (darkmode === "active") enableDarkMode()
+if (darkMode === "active") enableDarkMode()
 
 // Event listener for dark mode button
 darkModeButton.addEventListener("click", () => {
-    darkmode = localStorage.getItem("darkmode");
-    darkmode !== "active" ? enableDarkMode() : disableDarkMode();
+    darkMode = localStorage.getItem("darkMode");
+    darkMode !== "active" ? enableDarkMode() : disableDarkMode();
 });
 
 // Function to resize canvas based on screen size
@@ -72,8 +72,10 @@ function resizeCanvas() {
 
     gameCanvas.width = screenSize;
     gameCanvas.height = screenSize;
+
     scoreCanvas.width = screenSize;
     scoreCanvas.height = boxSize;
+
 }
 
 function checkDevice() {
@@ -215,13 +217,13 @@ function drawGame() {
 
 // Function to draw the score separately
 function drawScore() {
-    scorecolor = "black";
-    scorecolor = localStorage.getItem("scorecolor");
+    scoreColor = "black";
+    scoreColor = localStorage.getItem("scoreColor");
 
-    scoreCtx.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
-    scoreCtx.fillStyle = scorecolor;
+    scoreCtx.fillStyle = scoreColor;
     scoreCtx.font = boxSize + "px Pixel";
-    scoreCtx.fillText("Score: " + score, boxSize * 8, 30);
+    scoreCtx.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
+    scoreCtx.fillText("Score: " + score, boxSize * 8, boxSize);
 }
 
 function gameLoop() {
