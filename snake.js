@@ -90,7 +90,7 @@ function checkDevice() {
             if (event.key === "ArrowDown") changeDirection("DOWN");
         });
     } else {
-        controls.style.display = "block";
+        controls.style.display = "flex";
         document.getElementById("upButton").addEventListener("click", () => changeDirection("UP"));
         document.getElementById("downButton").addEventListener("click", () => changeDirection("DOWN"));
         document.getElementById("leftButton").addEventListener("click", () => changeDirection("LEFT"));
