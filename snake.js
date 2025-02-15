@@ -49,15 +49,15 @@ const enableDarkMode = () => {
     document.body.classList.add("darkMode");
     localStorage.setItem("darkMode", "active");
     localStorage.setItem("scoreColor", "white");
-}
+};
 
 const disableDarkMode = () => {
     document.body.classList.remove("darkMode");
     localStorage.setItem("darkMode", null);
     localStorage.setItem("scoreColor", "black");
-}
+};
 
-if (darkMode === "active") enableDarkMode()
+if (darkMode === "active") enableDarkMode();
 
 // Event listener for dark mode button
 darkModeButton.addEventListener("click", () => {
@@ -76,11 +76,11 @@ function resizeCanvas() {
 
     scoreCanvas.width = screenSize;
     scoreCanvas.height = boxSize;
-
 }
 
 function checkDevice() {
-    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const isTouchDevice =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
     if (!isTouchDevice) {
         document.addEventListener("keydown", (event) => {
@@ -91,10 +91,18 @@ function checkDevice() {
         });
     } else {
         controls.style.display = "flex";
-        document.getElementById("upButton").addEventListener("click", () => changeDirection("UP"));
-        document.getElementById("downButton").addEventListener("click", () => changeDirection("DOWN"));
-        document.getElementById("leftButton").addEventListener("click", () => changeDirection("LEFT"));
-        document.getElementById("rightButton").addEventListener("click", () => changeDirection("RIGHT"));
+        document
+            .getElementById("upButton")
+            .addEventListener("click", () => changeDirection("UP"));
+        document
+            .getElementById("downButton")
+            .addEventListener("click", () => changeDirection("DOWN"));
+        document
+            .getElementById("leftButton")
+            .addEventListener("click", () => changeDirection("LEFT"));
+        document
+            .getElementById("rightButton")
+            .addEventListener("click", () => changeDirection("RIGHT"));
     }
 }
 
@@ -133,7 +141,7 @@ function initGame() {
 function generateFood() {
     x = Math.floor(Math.random() * 20) * boxSize;
     y = Math.floor(Math.random() * 20) * boxSize;
-    while (snake.some(segment => segment.x === x && segment.y === y)) {
+    while (snake.some((segment) => segment.x === x && segment.y === y)) {
         x = Math.floor(Math.random() * 20) * boxSize;
         y = Math.floor(Math.random() * 20) * boxSize;
     }
@@ -150,7 +158,7 @@ function updateGame() {
     if (direction === "DOWN") headY += boxSize;
 
     // Check for collisions with itself
-    if (snake.some(segment => segment.x === headX && segment.y === headY)) {
+    if (snake.some((segment) => segment.x === headX && segment.y === headY)) {
         gameOver();
         return;
     }
@@ -174,7 +182,12 @@ function updateGame() {
     }
 
     // Increase speed as score increases
-    if (score % 10 === 0 && score > 0 && gameIntervalValue > 25 && !speedIncreased) {
+    if (
+        score % 10 === 0 &&
+        score > 0 &&
+        gameIntervalValue > 25 &&
+        !speedIncreased
+    ) {
         increaseSpeed();
         speedIncreased = true; // Set the flag to true after increasing speed
     }
@@ -207,9 +220,15 @@ function drawGame() {
             // Draw snake body
             gameCtx.fillStyle = "#8fc43c";
             gameCtx.beginPath();
-            gameCtx.arc(part.x + boxSize / 2, part.y + boxSize / 2, boxSize / 2, 0, Math.PI * 2);
+            gameCtx.arc(
+                part.x + boxSize / 2,
+                part.y + boxSize / 2,
+                boxSize / 2,
+                0,
+                Math.PI * 2
+            );
             gameCtx.fill();
-            gameCtx.lineWidth = 2;
+            gameCtx.lineWidth = 3;
             gameCtx.strokeStyle = "black";
             gameCtx.stroke();
         }
@@ -236,7 +255,7 @@ function gameLoop() {
 function gameOver() {
     music.pause();
     gameOverSound.play();
-    
+
     clearInterval(gameInterval); // Stop game
     alert("Game Over!\nYour score: " + score);
 
