@@ -14,6 +14,8 @@ const downButton = document.getElementById("downButton");
 const leftButton = document.getElementById("leftButton");
 const rightButton = document.getElementById("rightButton");
 
+const scoreboard = document.getElementById("scoreboard");
+
 // Load sounds
 const music = new Audio("assets/arcade_music.mp3");
 const eatSound = new Audio("assets/arcade_eat.mp3");
@@ -40,6 +42,7 @@ let snake;
 let score;
 let boxSize;
 let direction;
+let gameStopped;
 let gameInterval;
 let gameIntervalValue;
 let darkMode = localStorage.getItem("darkMode");
@@ -63,6 +66,11 @@ if (darkMode === "active") enableDarkMode();
 darkModeButton.addEventListener("click", () => {
     darkMode = localStorage.getItem("darkMode");
     darkMode !== "active" ? enableDarkMode() : disableDarkMode();
+
+    if (gameStopped) {
+        scoreColor = localStorage.getItem("scoreColor");
+        drawScore();
+    }
 });
 
 // Function to resize canvas based on screen size
@@ -119,6 +127,8 @@ function changeDirection(newDirection) {
 
 // Initialize game
 function initGame() {
+    scoreboard.style.display = "none"; // Hide the leaderboard
+
     music.play();
     music.loop = true;
     music.volume = 0.05;
@@ -127,6 +137,7 @@ function initGame() {
 
     score = 0;
     direction = "RIGHT";
+    gameStopped = false;
     gameIntervalValue = 150;
     gameInterval = setInterval(gameLoop, gameIntervalValue);
 
@@ -252,14 +263,47 @@ function gameLoop() {
     drawScore();
 }
 
+// Function to submit score
+function submitScore(playerName, score) {
+    db.ref("scores/").push({
+        name: playerName,
+        score: score,
+    });
+}
+
+// Function to fetch and display high scores
+function fetchScores() {
+    db.ref("scores/")
+        .orderByChild("score")
+        .limitToLast(10)
+        .once("value", (snapshot) => {
+            let scores = [];
+            snapshot.forEach((child) => {
+                scores.unshift(child.val());
+            });
+            scoreboard.innerHTML = "<h2>Leaderboard</h2>";
+            scores.forEach((entry) => {
+                scoreboard.innerHTML += `<p>${entry.name}: ${entry.score}</p>`;
+            });
+        });
+
+    scoreboard.style.display = "block";
+}
+
 function gameOver() {
+    gameStopped = true;
+
     music.pause();
     gameOverSound.play();
-
     clearInterval(gameInterval); // Stop game
-    alert("Game Over!\nYour score: " + score);
 
-    document.location.reload();
+    let playerName = prompt("Game Over! Enter your name:");
+    if (playerName) {
+        submitScore(playerName, score);
+        fetchScores(); // Refresh leaderboard
+    }
+
+    startButton.style.display = "block";
 }
 
 // Start game
