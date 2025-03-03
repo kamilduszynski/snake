@@ -128,6 +128,7 @@ function changeDirection(newDirection) {
 // Initialize game
 function initGame() {
     scoreboard.style.display = "none"; // Hide the leaderboard
+    startButton.style.display = "none"; // Hide the start button
 
     music.play();
     music.loop = true;
@@ -140,11 +141,9 @@ function initGame() {
     gameStopped = false;
     gameIntervalValue = 150;
     gameInterval = setInterval(gameLoop, gameIntervalValue);
-
     snake = [{ x: 10 * boxSize, y: 10 * boxSize }];
-    generateFood();
 
-    startButton.style.display = "none";
+    generateFood();
     checkDevice();
 }
 
@@ -298,6 +297,12 @@ function gameOver() {
     clearInterval(gameInterval); // Stop game
 
     let playerName = prompt("Game Over! Enter your name:");
+
+    while (playerName.length > 50) {
+        alert("Name too long! Please enter up to 50 characters.");
+        playerName = prompt("Enter your name:");
+    }
+
     if (playerName) {
         submitScore(playerName, score);
         fetchScores(); // Refresh leaderboard
