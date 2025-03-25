@@ -10,7 +10,7 @@
 
 @font-face {
     font-family: "Pixel";
-    src: url("assets/pixel_font.ttf");
+    src: url("assets/fonts/pixel_font.ttf");
 }
 
 body {
@@ -58,7 +58,7 @@ body {
     display: block;
     background: #000;
     border: 10px solid transparent;
-    border-image: url("assets/border.png") 30 round;
+    border-image: url("assets/images/border.png") 30 round;
 }
 
 #startButton {

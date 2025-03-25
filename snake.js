@@ -17,21 +17,21 @@ const rightButton = document.getElementById("rightButton");
 const scoreboard = document.getElementById("scoreboard");
 
 // Load sounds
-const music = new Audio("assets/arcade_music.mp3");
-const eatSound = new Audio("assets/arcade_eat.mp3");
-const gameOverSound = new Audio("assets/arcade_gameover.mp3");
+const music = new Audio("assets/sounds/arcade_music.mp3");
+const eatSound = new Audio("assets/sounds/arcade_eat.mp3");
+const gameOverSound = new Audio("assets/sounds/arcade_gameover.mp3");
 
 // Load images
-const snakeHeadImg = new Image();
-snakeHeadImg.src = "assets/head.png";
-
 const mouseImg = new Image();
-mouseImg.src = "assets/mouse.png";
+const snakeHeadImg = new Image();
+
+mouseImg.src = "assets/images/mouse.png";
+snakeHeadImg.src = "assets/images/head.png";
 
 // Load fonts
-const pixelFont = new FontFace("Pixel", "url(assets/pixel_font.ttf)");
-pixelFont.load();
-document.fonts.add(pixelFont);
+// const pixelFont = new FontFace("Pixel", "url(assets/fonts/pixel_font.ttf)");
+// pixelFont.load();
+// document.fonts.add(pixelFont);
 
 // Call resizeCanvas when the window loads and resizes and check if the device is touch-enabled
 window.addEventListener("load", resizeCanvas);
@@ -123,28 +123,6 @@ function changeDirection(newDirection) {
     if (newDirection === "DOWN" && direction !== "UP") direction = "DOWN";
 
     directionChanged = true; // Set the flag to true after changing direction
-}
-
-// Initialize game
-function initGame() {
-    scoreboard.style.display = "none"; // Hide the leaderboard
-    startButton.style.display = "none"; // Hide the start button
-
-    music.play();
-    music.loop = true;
-    music.volume = 0.05;
-    music.playbackRate = 1.25;
-    eatSound.playbackRate = 2;
-
-    score = 0;
-    direction = "RIGHT";
-    gameStopped = false;
-    gameIntervalValue = 150;
-    gameInterval = setInterval(gameLoop, gameIntervalValue);
-    snake = [{ x: 10 * boxSize, y: 10 * boxSize }];
-
-    generateFood();
-    checkDevice();
 }
 
 // Generating Food
@@ -245,7 +223,7 @@ function drawGame() {
     });
 }
 
-// Function to draw the score separately
+// Draw the score separately
 function drawScore() {
     scoreColor = "black";
     scoreColor = localStorage.getItem("scoreColor");
@@ -256,13 +234,7 @@ function drawScore() {
     scoreCtx.fillText("Score: " + score, boxSize * 8, boxSize);
 }
 
-function gameLoop() {
-    updateGame();
-    drawGame();
-    drawScore();
-}
-
-// Function to submit score
+// Submit score
 function submitScore(playerName, score) {
     db.ref("scores/").push({
         name: playerName,
@@ -270,7 +242,7 @@ function submitScore(playerName, score) {
     });
 }
 
-// Function to fetch and display high scores
+// Fetch and display high scores
 function fetchScores() {
     db.ref("scores/")
         .orderByChild("score")
@@ -298,17 +270,45 @@ function gameOver() {
 
     let playerName = prompt("Game Over! Enter your name:");
 
-    while (playerName.length > 50) {
-        alert("Name too long! Please enter up to 50 characters.");
-        playerName = prompt("Enter your name:");
-    }
-
     if (playerName) {
+        while (playerName.length > 50) {
+            alert("Name too long! Please enter up to 50 characters");
+            playerName = prompt("Enter your name:");
+        }
+
         submitScore(playerName, score);
         fetchScores(); // Refresh leaderboard
     }
 
     startButton.style.display = "block";
+}
+
+function gameLoop() {
+    updateGame();
+    drawGame();
+    drawScore();
+}
+
+// Initialize game
+function initGame() {
+    scoreboard.style.display = "none"; // Hide the leaderboard
+    startButton.style.display = "none"; // Hide the start button
+
+    music.play();
+    music.loop = true;
+    music.volume = 0.05;
+    music.playbackRate = 1.25;
+    eatSound.playbackRate = 2;
+
+    score = 0;
+    direction = "RIGHT";
+    gameStopped = false;
+    gameIntervalValue = 150;
+    gameInterval = setInterval(gameLoop, gameIntervalValue);
+    snake = [{ x: 10 * boxSize, y: 10 * boxSize }];
+
+    generateFood();
+    checkDevice();
 }
 
 // Start game
