@@ -125,13 +125,12 @@ function detectDirection(x, y) {
     let centerY = window.innerHeight / 2;
 
     if (Math.abs(x - centerX) > Math.abs(y - centerY)) {
-        direction = x > centerX ? "RIGHT" : "LEFT";
+        newDirection = x > centerX ? "RIGHT" : "LEFT";
     } else {
-        direction = y > centerY ? "DOWN" : "UP";
+        newDirection = y > centerY ? "DOWN" : "UP";
     }
 
-    showArrowIndicator(x, y, direction);
-    changeDirection(direction);
+    changeDirection(newDirection);
 }
 
 function changeDirection(newDirection) {
