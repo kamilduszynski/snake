@@ -8,7 +8,6 @@ const scoreCtx = scoreCanvas.getContext("2d");
 const darkModeButton = document.getElementById("darkModeButton");
 const startButton = document.getElementById("startButton");
 
-const controls = document.getElementById("controls");
 const upButton = document.getElementById("upButton");
 const downButton = document.getElementById("downButton");
 const leftButton = document.getElementById("leftButton");
@@ -98,20 +97,41 @@ function checkDevice() {
             if (event.key === "ArrowDown") changeDirection("DOWN");
         });
     } else {
-        controls.style.display = "flex";
-        document
-            .getElementById("upButton")
-            .addEventListener("click", () => changeDirection("UP"));
-        document
-            .getElementById("downButton")
-            .addEventListener("click", () => changeDirection("DOWN"));
-        document
-            .getElementById("leftButton")
-            .addEventListener("click", () => changeDirection("LEFT"));
-        document
-            .getElementById("rightButton")
-            .addEventListener("click", () => changeDirection("RIGHT"));
+        document.addEventListener("touchstart", (event) => {
+            let tapX = event.touches[0].clientX;
+            let tapY = event.touches[0].clientY;
+
+            showTouchIndicator(tapX, tapY);
+            detectDirection(tapX, tapY);
+        });
     }
+}
+
+function showTouchIndicator(x, y) {
+    let dot = document.createElement("div");
+    dot.classList.add("touchIndicator");
+    dot.style.left = `${x}px`;
+    dot.style.top = `${y}px`;
+    document.body.appendChild(dot);
+
+    setTimeout(() => {
+        dot.style.opacity = "0";
+        setTimeout(() => dot.remove(), 500);
+    }, 300);
+}
+
+function detectDirection(x, y) {
+    let centerX = window.innerWidth / 2;
+    let centerY = window.innerHeight / 2;
+
+    if (Math.abs(x - centerX) > Math.abs(y - centerY)) {
+        direction = x > centerX ? "RIGHT" : "LEFT";
+    } else {
+        direction = y > centerY ? "DOWN" : "UP";
+    }
+
+    showArrowIndicator(x, y, direction);
+    changeDirection(direction);
 }
 
 function changeDirection(newDirection) {

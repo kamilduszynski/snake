@@ -8,6 +8,17 @@
     --text-color: white;
 }
 
+.touchIndicator {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.5s ease-out;
+    pointer-events: none;
+}
+
 @font-face {
     font-family: "Pixel";
     src: url("assets/fonts/pixel_font.ttf");
@@ -78,26 +89,4 @@ body {
 
 #startButton:hover {
     background: #218838;
-}
-
-#controls {
-    display: none;
-    margin-top: 15px;
-    align-items: center;
-    flex-direction: column;
-}
-
-#controls div {
-    display: flex;
-    justify-content: center;
-}
-
-#controls button {
-    margin: 5px;
-    width: 70px;
-    height: 70px;
-    border: none;
-    font-size: 30px;
-    border-radius: 10px;
-    background: var(--text-color);
 }
